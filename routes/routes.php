@@ -2,7 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 
-// 1. Basic Routing (Menampilkan pesan halo sederhana)
-Route::get('/hello', function () {
-    return 'Hello, World!';
+Route::get('/', function () {
+    return '<h1>Selamat Datang di Sistem Minimarket</h1><p>Halaman Beranda Minimarket</p>';
 });
+
+Route::get('/about', function () {
+    return view('about');
+});
+
