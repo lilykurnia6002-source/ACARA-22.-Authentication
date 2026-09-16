@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProdukController;
 
 // ==========================================
 // LANGKAH 1 & 4: Rute Utama (Dashboard POS)
@@ -89,3 +90,7 @@ Route::get('/produk-toko', function () {
 
     return view('daftar_produk', ['produk' => $data_produk]);
 });
+
+// Routing ke ProdukController
+Route::get('/produk', [ProdukController::class, 'index']);
+Route::get('/produk/{id}', [ProdukController::class, 'show']);
