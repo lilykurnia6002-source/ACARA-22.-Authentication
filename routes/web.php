@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProdukController;
+use App\Http\Controllers\LaporanPenjualanController;
+use App\Http\Controllers\FormController;
+use App\Models\User;
+
 
 // ==========================================
 // LANGKAH 1 & 4: Rute Utama (Dashboard POS)
@@ -91,6 +95,92 @@ Route::get('/produk-toko', function () {
     return view('daftar_produk', ['produk' => $data_produk]);
 });
 
-// Routing ke ProdukController
+// Routing ke Controller
 Route::get('/produk', [ProdukController::class, 'index']);
-Route::get('/produk/{id}', [ProdukController::class, 'show']);
+Route::get('/laporan', LaporanPenjualanController::class);
+
+Route::get('/form', [FormController::class, 'index']);
+Route::post('/form', [FormController::class, 'submitForm']);
+
+// ==========================================
+// ACARA 19 - ELOQUENT ORM (PART 2)
+// ==========================================
+
+// Poin 1: Conditional Clause
+Route::get('/acara19/conditional', function () {
+    $usersWhere = User::where('status', 'active')->get();$usersOrWhere = User::where('status', 'active')->orWhere('role', 'admin')->get();
+    $usersBetween = User::whereBetween('age', [18, 30])->get();$usersIn = User::whereIn('role', ['admin', 'editor'])->get();
+    $usersNull = User::whereNull('deleted_at')->get();$usersNotNull = User::whereNotNull('email_verified_at')->get();
+
+    $role = 'admin';
+    $usersWhen = User::when($role, function ($query,$role) {
+        return $query->where('role',$role);
+    })->get();
+
+    return "Langkah 1: Conditional Clause Berhasil Dijalankan!";
+});
+
+// Poin 3: Test Accessor
+Route::get('/test-accessor', function () {
+    $user = User::find(1);
+    
+    if ($user) {
+        return "Full Name: " . $user->full_name;
+    } else {
+        return "User dengan ID 1 tidak ditemukan.";
+    }
+});
+
+// ==========================================
+// ROUTE DASHBOARD PENGUJIAN ELOQUENT (UI/UX)
+// ==========================================
+
+// Poin 4: Soft Deletes Testing
+Route::get('/test-soft-deletes', function () {
+    $user = User::first();$statusMsg = "Menampilkan data uji soft delete.";
+
+    if ($user) {
+        $user->delete();$statusMsg = "User ID {$user->id} berhasil di-Soft Delete (SoftDeletes Trait Aktif)!";
+    }
+
+    $trashedCount = User::onlyTrashed()->count();$activeCount = User::count();
+
+    return view('test-result', [
+        'title' => 'Poin 4: Soft Deletes Testing',
+        'badge' => 'SoftDeletes Trait',
+        'message' => $statusMsg,
+        'data' => [
+            'Total Active Users' => $activeCount,
+            'Total Soft Deleted Users' => $trashedCount,
+            'Sample Soft Deleted User' => User::onlyTrashed()->first()
+        ]
+    ]);
+});
+
+// Poin 5: Mass Assignment Protection
+Route::get('/test-mass-assignment', function () {
+    $user = User::create([
+        'name'     => 'User Mass Assignment',
+        'email'    => 'mass_' . time() . '@example.com',
+        'password' => 'password123'
+    ]);
+
+    return view('test-result', [
+        'title' => 'Poin 5: Mass Assignment Protection',
+        'badge' => 'Mass Assignment ($fillable)',
+        'message' => 'Data pengguna baru berhasil disimpan ke database secara massal!',
+        'data' => $user
+    ]);
+});
+
+// Poin 6: Query Scopes
+Route::get('/test-scope', function () {
+    $activeUsers = User::active()->get();
+
+    return view('test-result', [
+        'title' => 'Poin 6: Query Scopes (Local Scope)',
+        'badge' => 'scopeActive()',
+        'message' => 'Query scope `scopeActive` berhasil dijalankan pada model User!',
+        'data' => $activeUsers
+    ]);
+});

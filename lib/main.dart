@@ -120,3 +120,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+// Untuk Foto Profil Utama (misal menggunakan gambar 'hitam.jpg'):
+image: const DecorationImage(
+  image: AssetImage('hitam.jpg'),
+  fit: BoxFit.cover,
+),

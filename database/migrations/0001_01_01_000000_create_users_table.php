@@ -18,6 +18,11 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            
+            // DITAMBAHKAN UNTUK MEMPERBAIKI QUERY SCOPE & SOFT DELETES
+            $table->boolean('active')->default(true);
+            $table->softDeletes(); 
+            
             $table->timestamps();
         });
 
