@@ -12,10 +12,11 @@ use Illuminate\Notifications\Notifiable;
 // ==========================================
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-// Import Model untuk Relasi (Poin 2)
+// Import Model untuk Relasi
 use App\Models\Profile;
 use App\Models\Post;
 use App\Models\Role;
+use App\Models\Order; // Impor Model Order
 
 class User extends Authenticatable
 {
@@ -50,7 +51,7 @@ class User extends Authenticatable
     }
 
     // ==========================================
-    // ACARA 19 - POIN 2: RELASI ANTAR MODEL
+    // RELASI ANTAR MODEL
     // ==========================================
     public function profile()
     {
@@ -65,6 +66,12 @@ class User extends Authenticatable
     public function roles()
     {
         return $this->belongsToMany(Role::class);
+    }
+
+    // Relasi ke Order (Acara 18 & 19)
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 
     // ==========================================
