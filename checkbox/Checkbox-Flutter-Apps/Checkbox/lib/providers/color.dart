@@ -1,0 +1,1 @@
+import 'package:flutter/material.dart'; class SingleColor with ChangeNotifier { final String id; final String title; bool status; SingleColor({ required this.id, required this.title, this.status = false, }); void toogleStatus() { status = !status; notifyListeners(); } }

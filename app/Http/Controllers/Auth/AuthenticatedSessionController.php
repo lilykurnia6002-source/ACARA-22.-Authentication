@@ -28,7 +28,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // Redirect user setelah login berhasil
+        return redirect()->intended('/dashboard');
     }
 
     /**
@@ -36,12 +37,12 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
+        Auth::guard('web')->logout(); // Logout user
 
-        $request->session()->invalidate();
+        $request->session()->invalidate(); // Hapus sesi[cite: 18]
 
-        $request->session()->regenerateToken();
+        $request->session()->regenerateToken(); // Regenerasi CSRF token[cite: 18]
 
-        return redirect('/');
+        return redirect('/'); // Redirect ke halaman utama[cite: 18]
     }
 }

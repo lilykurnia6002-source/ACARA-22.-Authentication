@@ -10,6 +10,12 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     {{ __("You're logged in!") }}
+
+                    @can('admin')
+                        <div class="mt-4 p-4 text-sm text-green-800 bg-green-100 rounded-lg" role="alert">
+                            Selamat datang Admin! Kamu punya akses khusus ke fitur ini.
+                        </div>
+                    @endcan
                 </div>
             </div>
         </div>
